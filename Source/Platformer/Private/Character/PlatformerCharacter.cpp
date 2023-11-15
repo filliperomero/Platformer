@@ -32,8 +32,13 @@ APlatformerCharacter::APlatformerCharacter()
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
+	CameraBoom->TargetArmLength = 1500.0f;
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bInheritPitch = false;
+	CameraBoom->bInheritYaw = false;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 10.f;
+	CameraBoom->bDoCollisionTest = false;
 	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -50,6 +55,18 @@ void APlatformerCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+}
+
+void APlatformerCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bCanAdjustCameraInRealtime)
+	{
+		CameraBoom->SetRelativeLocation(FVector(CameraXOffset, CameraYOffset, CameraZOffset));
+		CameraBoom->CameraLagSpeed = CameraLagSpeed;
+		CameraBoom->TargetArmLength = CameraDistanceFromPlayer;
 	}
 }
 

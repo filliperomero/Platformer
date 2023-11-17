@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interface/PlayerInterface.h"
 #include "Logging/LogMacros.h"
 #include "PFCharacter.generated.h"
 
@@ -16,18 +17,22 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class APFCharacter : public ACharacter
+class APFCharacter : public ACharacter, public IPlayerInterface
 {
 	GENERATED_BODY()
 
 public:
 	APFCharacter();
 
+	/** Player Interface */
+	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;
+	/** Player Interface */
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
+	void PlayerDown(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Realtime Camera Settings (Temporary)")
@@ -49,6 +54,9 @@ protected:
 	float CameraLagSpeed = 10.f;
 
 private:
+	UPROPERTY()
+	APFPlatformBase* OverlappingPlatform;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 	
@@ -65,7 +73,7 @@ private:
 	UInputAction* MoveAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+	UInputAction* PlayerDownAction;
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

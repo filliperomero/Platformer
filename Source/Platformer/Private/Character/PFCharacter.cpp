@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Platform/PFPlatformBase.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -49,6 +50,11 @@ APFCharacter::APFCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 }
 
+void APFCharacter::UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform)
+{
+  	OverlappingPlatform = Platform;
+}
+
 void APFCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -81,7 +87,7 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFCharacter::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APFCharacter::Look);
+		EnhancedInputComponent->BindAction(PlayerDownAction, ETriggerEvent::Started, this, &APFCharacter::PlayerDown);
 	}
 	else
 	{
@@ -105,15 +111,11 @@ void APFCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void APFCharacter::Look(const FInputActionValue& Value)
+void APFCharacter::PlayerDown(const FInputActionValue& Value)
 {
-	// Disabled for now to be deleted later
-	
-	// const FVector2D LookAxisVector = Value.Get<FVector2D>();
-	//
-	// if (Controller != nullptr)
-	// {
-	// 	AddControllerYawInput(LookAxisVector.X);
-	// 	AddControllerPitchInput(LookAxisVector.Y);
-	// }
+	if (IsValid(OverlappingPlatform))
+	{
+		OverlappingPlatform->GetPlatformMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		OverlappingPlatform = nullptr;
+	}
 }

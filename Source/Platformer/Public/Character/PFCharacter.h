@@ -1,11 +1,11 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Fillipe Romero
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "PlatformerCharacter.generated.h"
+#include "PFCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -16,12 +16,12 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class APlatformerCharacter : public ACharacter
+class APFCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	APlatformerCharacter();
+	APFCharacter();
 
 protected:
 	virtual void BeginPlay() override;

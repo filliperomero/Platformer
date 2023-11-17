@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Fillipe Romero
 
 #include "Platformer.h"
 #include "Modules/ModuleManager.h"

@@ -1,6 +1,6 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Fillipe Romero
 
-#include "Character/PlatformerCharacter.h"
+#include "Character/PFCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,7 +13,7 @@
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
-APlatformerCharacter::APlatformerCharacter()
+APFCharacter::APFCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -49,7 +49,7 @@ APlatformerCharacter::APlatformerCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 }
 
-void APlatformerCharacter::BeginPlay()
+void APFCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -62,7 +62,7 @@ void APlatformerCharacter::BeginPlay()
 	}
 }
 
-void APlatformerCharacter::Tick(float DeltaSeconds)
+void APFCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
@@ -74,14 +74,14 @@ void APlatformerCharacter::Tick(float DeltaSeconds)
 	}
 }
 
-void APlatformerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlatformerCharacter::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlatformerCharacter::Look);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFCharacter::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APFCharacter::Look);
 	}
 	else
 	{
@@ -89,7 +89,7 @@ void APlatformerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	}
 }
 
-void APlatformerCharacter::Move(const FInputActionValue& Value)
+void APFCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -105,7 +105,7 @@ void APlatformerCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void APlatformerCharacter::Look(const FInputActionValue& Value)
+void APFCharacter::Look(const FInputActionValue& Value)
 {
 	// Disabled for now to be deleted later
 	

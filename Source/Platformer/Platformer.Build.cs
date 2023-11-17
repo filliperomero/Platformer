@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Fillipe Romero
 
 using UnrealBuildTool;
 

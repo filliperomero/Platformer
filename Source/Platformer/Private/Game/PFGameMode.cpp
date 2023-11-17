@@ -1,9 +1,9 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Fillipe Romero
 
-#include "Game/PlatformerGameMode.h"
+#include "Game/PFGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 
-APlatformerGameMode::APlatformerGameMode()
+APFGameMode::APFGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter"));

@@ -8,16 +8,19 @@ APFPlatformBase::APFPlatformBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SetRootComponent(RootComponent);
+
 	Platform = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Platform"));
-	SetRootComponent(Platform);
+	Platform->SetupAttachment(RootComponent);
 
 	CollisionTop = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionTop"));
-	CollisionTop->SetupAttachment(RootComponent);
+	CollisionTop->SetupAttachment(Platform);
 	CollisionTop->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CollisionTop->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
 	CollisionBottom = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBottom"));
-	CollisionBottom->SetupAttachment(RootComponent);
+	CollisionBottom->SetupAttachment(Platform);
 	CollisionBottom->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CollisionBottom->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }

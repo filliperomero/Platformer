@@ -3,6 +3,7 @@
 #include "Platform/PFPlatformBase.h"
 
 #include "Components/BoxComponent.h"
+#include "Interface/PlayerInterface.h"
 
 APFPlatformBase::APFPlatformBase()
 {
@@ -28,4 +29,21 @@ APFPlatformBase::APFPlatformBase()
 void APFPlatformBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CollisionBottom->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnCollisionBottomBeginOverlap);
+	CollisionBottom->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnCollisionBottomEndOverlap);
+}
+
+void APFPlatformBase::OnCollisionBottomBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!OtherActor->Implements<UPlayerInterface>()) return;
+
+	Platform->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void APFPlatformBase::OnCollisionBottomEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (!OtherActor->Implements<UPlayerInterface>()) return;
+
+	Platform->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }

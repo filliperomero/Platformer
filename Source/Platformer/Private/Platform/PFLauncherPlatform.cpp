@@ -18,6 +18,8 @@ APFLauncherPlatform::APFLauncherPlatform()
 	CollisionBottom = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBottom"));
 	CollisionBottom->SetupAttachment(MushroomTop);
 	CollisionBottom->SetBoxExtent(FVector(50.f, 50.f, 60.f));
+	CollisionBottom->SetCollisionResponseToAllChannels(ECR_Ignore);
+	CollisionBottom->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
 	MushroomTrunk = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("MushroomTrunk"));
 	MushroomTrunk->SetupAttachment(RootComponent);

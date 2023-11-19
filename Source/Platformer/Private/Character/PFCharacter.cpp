@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Platform/PFPlatformBase.h"
+#include "Player/PFPlayerController.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -53,6 +54,14 @@ APFCharacter::APFCharacter()
 void APFCharacter::UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform)
 {
   	OverlappingPlatform = Platform;
+}
+
+void APFCharacter::AddToCoins_Implementation(int32 InCoins)
+{
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+	check(PFPlayerController)
+	
+	return PFPlayerController->AddCoins(InCoins);
 }
 
 void APFCharacter::BeginPlay()

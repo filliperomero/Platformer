@@ -8,6 +8,7 @@
 #include "Logging/LogMacros.h"
 #include "PFCharacter.generated.h"
 
+class APFPlayerController;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -26,6 +27,7 @@ public:
 
 	/** Player Interface */
 	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;
+	virtual void AddToCoins_Implementation(int32 InCoins) override;
 	/** Player Interface */
 
 protected:
@@ -55,7 +57,10 @@ protected:
 
 private:
 	UPROPERTY()
-	APFPlatformBase* OverlappingPlatform;
+	TObjectPtr<APFPlatformBase> OverlappingPlatform;
+
+	UPROPERTY()
+	APFPlayerController* PFPlayerController;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;

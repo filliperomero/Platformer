@@ -28,6 +28,7 @@ public:
 	/** Player Interface */
 	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;
 	virtual void AddToCoins_Implementation(int32 InCoins) override;
+	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
 	/** Player Interface */
 
 protected:
@@ -54,6 +55,24 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Realtime Camera Settings (Temporary)")
 	float CameraLagSpeed = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> DamagedMaterial_0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> DamagedMaterial_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> DamagedMaterial_2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USoundBase> PowerUpSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USoundBase> PowerDownSound;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 HitPoints { 2 };
 
 private:
 	UPROPERTY()

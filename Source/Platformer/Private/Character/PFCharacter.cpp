@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
 #include "Platform/PFPlatformBase.h"
 #include "Player/PFPlayerController.h"
 
@@ -62,6 +63,42 @@ void APFCharacter::AddToCoins_Implementation(int32 InCoins)
 	check(PFPlayerController)
 	
 	return PFPlayerController->AddCoins(InCoins);
+}
+
+void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
+{
+	HitPoints = FMath::Clamp(HitPoints + InHitPoints, 0, 2);
+
+	if (HitPoints == 0)
+	{
+		Destroy();
+		return;
+	}
+
+	switch (HitPoints)
+	{
+	case 0:
+		GetMesh()->SetMaterial(0, DamagedMaterial_0);
+		break;
+	case 1:
+		GetMesh()->SetMaterial(0, DamagedMaterial_1);
+		break;
+	case 2:
+		GetMesh()->SetMaterial(0, DamagedMaterial_2);
+		break;
+	default:
+		GetMesh()->SetMaterial(0, DamagedMaterial_2);
+		break;
+	}
+
+	if (InHitPoints > 0)
+	{
+		if (PowerUpSound) UGameplayStatics::PlaySound2D(this, PowerUpSound);
+	}
+	else if (InHitPoints < 0 && HitPoints != 0)
+	{
+		if (PowerDownSound) UGameplayStatics::PlaySound2D(this, PowerDownSound);
+	}
 }
 
 void APFCharacter::BeginPlay()

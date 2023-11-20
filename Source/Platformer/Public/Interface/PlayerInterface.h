@@ -24,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void AddToCoins(int32 InCoins);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void AddHitPoints(int32 InHitPoints);
 };

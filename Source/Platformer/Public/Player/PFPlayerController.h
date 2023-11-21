@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "PFPlayerController.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32 /*StatValue*/)
+
 UCLASS()
 class PLATFORMER_API APFPlayerController : public APlayerController
 {
@@ -14,18 +16,29 @@ class PLATFORMER_API APFPlayerController : public APlayerController
 public:
 	void AddCoins(int32 InCoins);
 
+	FOnPlayerStatChangedSignature OnCoinsChangedDelegate;
+	FOnPlayerStatChangedSignature OnLivesChangedDelegate;
+	FOnPlayerStatChangedSignature OnPointsChangedDelegate;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SFX")
 	TObjectPtr<USoundBase> ReceiveLiveSound;
-
+	
 private:
 	UPROPERTY(VisibleAnywhere)
-	int32 Coins { 0 };
+	int32 Coins = 0;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 Lives { 3 };
+	int32 Lives = 3;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 Points = 0;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 LevelTime = 500;
 
 public:
 	FORCEINLINE int32 GetCoins() const { return Coins; }
 	FORCEINLINE int32 GetLives() const { return Lives; }
+	FORCEINLINE int32 GetPoints() const { return Points; }
 };

@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Platform/PFPlatformBase.h"
 #include "Player/PFPlayerController.h"
+#include "UI/HUD/PFHUD.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -50,6 +51,19 @@ APFCharacter::APFCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+}
+
+void APFCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	if (APFPlayerController* PC = Cast<APFPlayerController>(GetController()))
+	{
+		if (APFHUD* PFHUD = Cast<APFHUD>(PC->GetHUD()))
+		{
+			PFHUD->InitOverlay(PC);
+		}
+	}
 }
 
 void APFCharacter::UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform)

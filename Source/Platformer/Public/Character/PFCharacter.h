@@ -24,6 +24,7 @@ class APFCharacter : public ACharacter, public IPlayerInterface
 
 public:
 	APFCharacter();
+	virtual void PossessedBy(AController* NewController) override;
 
 	/** Player Interface */
 	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;

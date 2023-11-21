@@ -13,6 +13,7 @@ void APFPlayerController::AddCoins(int32 InCoins)
 	{
 		Coins = FMath::Clamp(NewCoins - 100, 0, 100);
 		Lives++;
+		OnLivesChangedDelegate.Broadcast(Lives);
 		if (ReceiveLiveSound) UGameplayStatics::PlaySound2D(this, ReceiveLiveSound);
 	}
 	else
@@ -20,5 +21,5 @@ void APFPlayerController::AddCoins(int32 InCoins)
 		Coins = FMath::Clamp(NewCoins, 0, 100);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Amount of Coins %d and Amount of Lives %d"), Coins, Lives);
+	OnCoinsChangedDelegate.Broadcast(Coins);
 }

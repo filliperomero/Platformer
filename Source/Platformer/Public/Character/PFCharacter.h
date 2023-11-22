@@ -30,6 +30,7 @@ public:
 	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;
 	virtual void AddToCoins_Implementation(int32 InCoins) override;
 	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
+	virtual void AddToPoints_Implementation(int32 InPoints) override;
 	/** Player Interface */
 
 protected:

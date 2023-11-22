@@ -115,6 +115,14 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 	}
 }
 
+void APFCharacter::AddToPoints_Implementation(int32 InPoints)
+{
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+	check(PFPlayerController)
+	
+	return PFPlayerController->AddPoints(InPoints);
+}
+
 void APFCharacter::BeginPlay()
 {
 	Super::BeginPlay();

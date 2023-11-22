@@ -23,3 +23,9 @@ void APFPlayerController::AddCoins(int32 InCoins)
 
 	OnCoinsChangedDelegate.Broadcast(Coins);
 }
+
+void APFPlayerController::AddPoints(int32 InPoints)
+{
+	Points += InPoints;
+	OnPointsChangedDelegate.Broadcast(Points);
+}

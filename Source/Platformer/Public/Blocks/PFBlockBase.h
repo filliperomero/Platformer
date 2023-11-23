@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PFBlockBase.generated.h"
 
+class UPFPointsTextComponent;
 class UNiagaraSystem;
 
 UCLASS()
@@ -21,10 +22,14 @@ protected:
 
 	UFUNCTION()
 	virtual void OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	virtual void HitBlock();
+	virtual void HitBlock(AActor* TargetActor);
+	void ShowFloatingPoints(AActor* TargetActor);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> BlockMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Block Properties")
+	TSubclassOf<UPFPointsTextComponent> PointsTextComponentClass;
 
 	bool bIsFinishedInteracting = false;
 

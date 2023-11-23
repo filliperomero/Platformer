@@ -3,6 +3,7 @@
 #include "Blocks/PFBlockBase.h"
 
 #include "Interface/PlayerInterface.h"
+#include "UI/Widget/PFPointsTextComponent.h"
 
 APFBlockBase::APFBlockBase()
 {
@@ -25,9 +26,21 @@ void APFBlockBase::OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 {
 	if (!OtherActor->Implements<UPlayerInterface>() || Hit.ImpactNormal.Z != 1) return;
 
-	HitBlock();
+	HitBlock(OtherActor);
 }
 
-void APFBlockBase::HitBlock()
+void APFBlockBase::HitBlock(AActor* TargetActor)
 {
+}
+
+void APFBlockBase::ShowFloatingPoints(AActor* TargetActor)
+{
+	// TODO: Still need to understand why this does not work with Actor class with this set of components
+	if (PointsTextComponentClass == nullptr) return;
+
+	UPFPointsTextComponent* PointsTextComponent = NewObject<UPFPointsTextComponent>(TargetActor, PointsTextComponentClass);
+	PointsTextComponent->RegisterComponent();
+	PointsTextComponent->AttachToComponent(TargetActor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	PointsTextComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	PointsTextComponent->SetPointsText(AmountOfPoints);
 }

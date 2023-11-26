@@ -30,13 +30,23 @@ void APFUnbreakableBlock::BeginPlay()
 	{
 		BoxCollision->Deactivate();
 	}
+
+	// Since we don't have InteractTime, it'll always be the last interact
+	if (InteractTime <= 0.f) IsLastInteract = true;
 }
 
+// Refactor code to remove the MaxAmountOfInteract and use a Timer now since the Project uses it
 void APFUnbreakableBlock::HitBlock(AActor* TargetActor)
 {
 	Super::HitBlock(TargetActor);
-	
-	if (AmountOfInteract >= MaxAmountOfInteract)
+
+	if (IsFirstInteract && InteractTime > 0.f)
+	{
+		IsFirstInteract = false;
+		GetWorldTimerManager().SetTimer(InteractTimer, this, &ThisClass::InteractTimerFinished, InteractTime);
+	}
+
+	if (!CanInteract)
 	{
 		if (NotAbleToInteractSound) UGameplayStatics::PlaySound2D(this, NotAbleToInteractSound);
 
@@ -48,16 +58,11 @@ void APFUnbreakableBlock::HitBlock(AActor* TargetActor)
 		BlockMesh->SetVisibility(true);
 		if (BoxCollision) BoxCollision->DestroyComponent();
 	}
-
-	const bool IsLastInteract = AmountOfInteract + 1 >= MaxAmountOfInteract;
 	
 	FVector Location = GetActorLocation();
 	Location.Z += 50;
 	
 	UPFFunctionLibrary::PlayBlockInteractFX(this, SoundEffect, nullptr, InteractParticleEffect, Location);
-	
-	if (InteractMaterial && IsLastInteract)
-		BlockMesh->SetMaterial(0, InteractMaterial);
 	
 	ShowFloatingPoints(TargetActor);
 
@@ -69,8 +74,12 @@ void APFUnbreakableBlock::HitBlock(AActor* TargetActor)
 		GetWorld()->SpawnActor<AActor>(CoinToSpawn, GetActorTransform());
 
 	AnimateBlock();
-	
-	AmountOfInteract++;
+
+	if (InteractMaterial && IsLastInteract)
+	{
+		BlockMesh->SetMaterial(0, InteractMaterial);
+		CanInteract = false;
+	}
 }
 
 void APFUnbreakableBlock::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -85,4 +94,9 @@ void APFUnbreakableBlock::OnBoxEndOverlap(UPrimitiveComponent* OverlappedCompone
 	if (!OtherActor->Implements<UPlayerInterface>()) return;
 
 	BlockMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void APFUnbreakableBlock::InteractTimerFinished()
+{
+	IsLastInteract = true;
 }

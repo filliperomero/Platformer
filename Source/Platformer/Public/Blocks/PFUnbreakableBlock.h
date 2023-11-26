@@ -26,6 +26,8 @@ protected:
 	UFUNCTION()
 	virtual void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+	void InteractTimerFinished();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AnimateBlock();
@@ -38,13 +40,19 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	TObjectPtr<USoundBase> NotAbleToInteractSound;
-
+	
+	/** Amount of Time a Block can be interacted. Set to 0.f to make it interacted only once */
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
-	int32 MaxAmountOfInteract = 1;
+	float InteractTime = 0.f;
 
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	bool IsInvisible = false;
 
 private:
-	int32 AmountOfInteract = 0;
+	bool CanInteract = true;
+	bool IsFirstInteract = true;
+	bool IsLastInteract = false;
+
+	UPROPERTY()
+	FTimerHandle InteractTimer;
 };

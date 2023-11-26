@@ -31,8 +31,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	TSubclassOf<UPFPointsTextComponent> PointsTextComponentClass;
 
-	bool bIsFinishedInteracting = false;
-
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	int32 AmountOfCoins = 1;
 

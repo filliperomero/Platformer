@@ -3,7 +3,6 @@
 #include "Blocks/PFBreakableBlock.h"
 
 #include "PFFunctionLibrary.h"
-#include "Character/PFCharacter.h"
 #include "Interface/PlayerInterface.h"
 
 APFBreakableBlock::APFBreakableBlock()

@@ -75,9 +75,9 @@ void APFUnbreakableBlock::HitBlock(AActor* TargetActor)
 
 	AnimateBlock();
 
-	if (InteractMaterial && IsLastInteract)
+	if (IsLastInteract)
 	{
-		BlockMesh->SetMaterial(0, InteractMaterial);
+		if (InteractMaterial) BlockMesh->SetMaterial(0, InteractMaterial);
 		CanInteract = false;
 	}
 }

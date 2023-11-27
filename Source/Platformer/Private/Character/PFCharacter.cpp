@@ -20,6 +20,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 APFCharacter::APFCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -112,6 +113,8 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 	else if (InHitPoints < 0 && HitPoints != 0)
 	{
 		if (PowerDownSound) UGameplayStatics::PlaySound2D(this, PowerDownSound);
+		HasFlowerPower = false;
+		HandleDamageCharacter();
 	}
 }
 
@@ -121,6 +124,17 @@ void APFCharacter::AddToPoints_Implementation(int32 InPoints)
 	check(PFPlayerController)
 	
 	return PFPlayerController->AddPoints(InPoints);
+}
+
+void APFCharacter::ActivatePowerUp_Implementation(const EPowerUpType PowerUpType)
+{
+	if (PowerUpType == EPowerUpType::EPT_FlowerPower)
+	{
+		if (PowerUpSound) UGameplayStatics::PlaySound2D(this, PowerUpSound);
+		Execute_AddHitPoints(this, 1);
+		HandleCharacterGrowth();
+		HasFlowerPower = true;
+	}
 }
 
 void APFCharacter::BeginPlay()

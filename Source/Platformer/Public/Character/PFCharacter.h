@@ -31,6 +31,7 @@ public:
 	virtual void AddToCoins_Implementation(int32 InCoins) override;
 	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
 	virtual void AddToPoints_Implementation(int32 InPoints) override;
+	virtual void ActivatePowerUp_Implementation(const EPowerUpType PowerUpType) override;
 	/** Player Interface */
 
 protected:
@@ -39,6 +40,12 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void PlayerDown(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HandleCharacterGrowth();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HandleDamageCharacter();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Realtime Camera Settings (Temporary)")
 	bool bCanAdjustCameraInRealtime = false;
@@ -100,6 +107,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PlayerDownAction;
+
+	// For Now we are going to have this variable
+	bool HasFlowerPower = false;
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

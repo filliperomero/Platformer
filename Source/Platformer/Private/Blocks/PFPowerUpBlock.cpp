@@ -68,6 +68,7 @@ void APFPowerUpBlock::OnPowerUpBoxBeginOverlap(UPrimitiveComponent* OverlappedCo
 
 	ShowFloatingPoints(OtherActor);
 	IPlayerInterface::Execute_AddToPoints(OtherActor, AmountOfPoints);
+	IPlayerInterface::Execute_ActivatePowerUp(OtherActor, EPowerUpType::EPT_FlowerPower);
 
 	if (SpawnedParticle) SpawnedParticle->DestroyComponent();
 	PowerUpMesh->DestroyComponent();

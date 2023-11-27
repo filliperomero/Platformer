@@ -8,6 +8,12 @@
 
 class APFPlatformBase;
 
+UENUM(BlueprintType)
+enum class EPowerUpType
+{
+	EPT_FlowerPower UMETA(DisplayName = "Flower Power Up")
+};
+
 UINTERFACE(MinimalAPI, BlueprintType)
 class UPlayerInterface : public UInterface
 {
@@ -30,4 +36,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void AddToPoints(int32 InPoints);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ActivatePowerUp(const EPowerUpType PowerUpType);
 };

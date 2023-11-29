@@ -1,0 +1,37 @@
+﻿// Copyright Fillipe Romero
+
+#include "Projectiles/PFFireball.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Platformer/Platformer.h"
+
+APFFireball::APFFireball()
+{
+	PrimaryActorTick.bCanEverTick = false;
+	
+	Fireball = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fireball"));
+	SetRootComponent(Fireball);
+	Fireball->SetCollisionResponseToAllChannels(ECR_Block);
+	Fireball->SetCollisionObjectType(ECC_Fireball);
+	Fireball->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	Fireball->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	Fireball->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	Fireball->SetCollisionResponseToChannel(ECC_Fireball, ECR_Ignore);
+
+	FireballParticleSystemComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("FireballParticleSystemComponent"));
+	FireballParticleSystemComponent->SetupAttachment(RootComponent);
+
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+	ProjectileMovement->InitialSpeed = 2500.f;
+	ProjectileMovement->MaxSpeed = 2500.f;
+	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->Bounciness = .5f;
+	ProjectileMovement->Friction = 0.f;
+}
+
+void APFFireball::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	SetLifeSpan(2.f);
+}

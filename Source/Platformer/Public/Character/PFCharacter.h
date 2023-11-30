@@ -8,6 +8,7 @@
 #include "Logging/LogMacros.h"
 #include "PFCharacter.generated.h"
 
+class APFFireball;
 class APFPlayerController;
 class USpringArmComponent;
 class UCameraComponent;
@@ -39,6 +40,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	void Move(const FInputActionValue& Value);
 	void PlayerDown(const FInputActionValue& Value);
+	void ShootFireball(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -83,6 +85,15 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	int32 HitPoints { 2 };
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName HandSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<APFFireball> FireballClass;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USoundBase> FireballSound;
+
 private:
 	UPROPERTY()
 	TObjectPtr<APFPlatformBase> OverlappingPlatform;
@@ -107,6 +118,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PlayerDownAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ShootAction;
 
 	// For Now we are going to have this variable
 	bool HasFlowerPower = false;

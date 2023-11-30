@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Platform/PFPlatformBase.h"
 #include "Player/PFPlayerController.h"
+#include "Projectiles/PFFireball.h"
 #include "UI/HUD/PFHUD.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -170,6 +171,7 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFCharacter::Move);
 		EnhancedInputComponent->BindAction(PlayerDownAction, ETriggerEvent::Started, this, &APFCharacter::PlayerDown);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &APFCharacter::ShootFireball);
 	}
 	else
 	{
@@ -200,4 +202,19 @@ void APFCharacter::PlayerDown(const FInputActionValue& Value)
 		OverlappingPlatform->GetPlatformMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		OverlappingPlatform = nullptr;
 	}
+}
+
+void APFCharacter::ShootFireball(const FInputActionValue& Value)
+{
+	if (!HasFlowerPower) return;
+	
+	const FVector SocketLocation = GetMesh()->GetSocketLocation(HandSocketName);
+
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(SocketLocation);
+	SpawnTransform.SetRotation(FRotator(-30.f, 0.f, -90.f).Quaternion());
+
+	GetWorld()->SpawnActor<APFFireball>(FireballClass, SpawnTransform);
+	
+	if (FireballSound) UGameplayStatics::PlaySoundAtLocation(this, FireballSound, GetActorLocation());
 }

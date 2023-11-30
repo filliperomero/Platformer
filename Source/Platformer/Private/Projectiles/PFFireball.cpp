@@ -2,6 +2,7 @@
 
 #include "Projectiles/PFFireball.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Platformer/Platformer.h"
 
@@ -34,4 +35,25 @@ void APFFireball::BeginPlay()
 	Super::BeginPlay();
 	
 	SetLifeSpan(2.f);
+
+	ProjectileMovement->OnProjectileBounce.AddDynamic(this, &ThisClass::OnProjectileMovementBounce);
+}
+
+void APFFireball::OnProjectileMovementBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
+{
+	if (ImpactResult.Normal.GetAbs().Z >= 0.9)
+	{
+		++BouncesCounter;
+	} 
+
+	if (BouncesCounter >= 2 || ImpactResult.Normal.GetAbs().Z < 0.9)
+	{
+		if (ParticleEffect)
+			UGameplayStatics::SpawnEmitterAtLocation(this, ParticleEffect, GetActorLocation());
+
+		if (SoundEffect)
+			UGameplayStatics::PlaySound2D(this, SoundEffect);
+
+		Destroy();
+	}
 }

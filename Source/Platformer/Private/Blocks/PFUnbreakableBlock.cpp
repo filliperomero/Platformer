@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Interface/PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Platformer/Platformer.h"
 
 APFUnbreakableBlock::APFUnbreakableBlock()
 {
@@ -23,6 +24,7 @@ void APFUnbreakableBlock::BeginPlay()
 	if (IsInvisible)
 	{
 		BlockMesh->SetVisibility(false);
+		BlockMesh->SetCollisionResponseToChannel(ECC_Fireball, ECR_Ignore);
 		BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBoxBeginOverlap);
 		BoxCollision->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnBoxEndOverlap);
 	}
@@ -56,6 +58,7 @@ void APFUnbreakableBlock::HitBlock(AActor* TargetActor)
 	if (IsInvisible && !BlockMesh->IsVisible())
 	{
 		BlockMesh->SetVisibility(true);
+		BlockMesh->SetCollisionResponseToChannel(ECC_Fireball, ECR_Block);
 		if (BoxCollision) BoxCollision->DestroyComponent();
 	}
 	

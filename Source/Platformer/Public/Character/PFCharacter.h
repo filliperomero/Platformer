@@ -94,6 +94,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USoundBase> FireballSound;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float FireballDelay = 1.f;
+
 private:
 	UPROPERTY()
 	TObjectPtr<APFPlatformBase> OverlappingPlatform;
@@ -123,7 +126,13 @@ private:
 	UInputAction* ShootAction;
 
 	// For Now we are going to have this variable
-	bool HasFlowerPower = false;
+	bool bHasFlowerPower = false;
+
+	bool bCanShoot = true;
+
+	FTimerHandle FireballTimer;
+
+	void FireballTimerFinished();
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

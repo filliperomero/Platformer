@@ -114,7 +114,7 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 	else if (InHitPoints < 0 && HitPoints != 0)
 	{
 		if (PowerDownSound) UGameplayStatics::PlaySound2D(this, PowerDownSound);
-		HasFlowerPower = false;
+		bHasFlowerPower = false;
 		HandleDamageCharacter();
 	}
 }
@@ -134,7 +134,7 @@ void APFCharacter::ActivatePowerUp_Implementation(const EPowerUpType PowerUpType
 		if (PowerUpSound) UGameplayStatics::PlaySound2D(this, PowerUpSound);
 		Execute_AddHitPoints(this, 1);
 		HandleCharacterGrowth();
-		HasFlowerPower = true;
+		bHasFlowerPower = true;
 	}
 }
 
@@ -179,6 +179,11 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
+void APFCharacter::FireballTimerFinished()
+{
+	bCanShoot = true;
+}
+
 void APFCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
@@ -206,13 +211,18 @@ void APFCharacter::PlayerDown(const FInputActionValue& Value)
 
 void APFCharacter::ShootFireball(const FInputActionValue& Value)
 {
-	if (!HasFlowerPower) return;
+	if (!bHasFlowerPower || !bCanShoot) return;
+
+	bCanShoot = false;
+
+	GetWorldTimerManager().SetTimer(FireballTimer, this, &APFCharacter::FireballTimerFinished, FireballDelay);
 	
 	const FVector SocketLocation = GetMesh()->GetSocketLocation(HandSocketName);
+	const float YawRotation = GetActorForwardVector().X < 0 ? 180.f : 0.f;
 
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
-	SpawnTransform.SetRotation(FRotator(-30.f, 0.f, -90.f).Quaternion());
+	SpawnTransform.SetRotation(FRotator(-30.f, YawRotation, 0.f).Quaternion());
 
 	GetWorld()->SpawnActor<APFFireball>(FireballClass, SpawnTransform);
 	

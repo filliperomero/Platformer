@@ -19,6 +19,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnProjectileMovementBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity);
+
 	UPROPERTY(EditAnywhere, Category = "Fireball Properties")
 	TObjectPtr<UStaticMeshComponent> Fireball;
 
@@ -27,4 +30,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Fireball Properties")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+
+	UPROPERTY(EditAnywhere, Category = "Fireball Properties")
+	TObjectPtr<UParticleSystem> ParticleEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Fireball Properties")
+	TObjectPtr<USoundBase> SoundEffect;
+
+private:
+	int32 BouncesCounter = 0;
 };

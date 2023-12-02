@@ -18,4 +18,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void HitBlock(AActor* TargetActor) override;
+
+	UPROPERTY(EditAnywhere, Category = "Block Properties")
+	TObjectPtr<USoundBase> NotAbleToBreakSound;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AnimateBlock();
 };

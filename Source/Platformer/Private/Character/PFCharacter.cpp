@@ -103,7 +103,7 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 		GetMesh()->SetMaterial(0, DamagedMaterial_2);
 		break;
 	default:
-		GetMesh()->SetMaterial(0, DamagedMaterial_2);
+		GetMesh()->SetMaterial(0, DamagedMaterial_1);
 		break;
 	}
 
@@ -136,6 +136,24 @@ void APFCharacter::ActivatePowerUp_Implementation(const EPowerUpType PowerUpType
 		HandleCharacterGrowth();
 		bHasFlowerPower = true;
 	}
+}
+
+bool APFCharacter::CanBreakBlock_Implementation()
+{
+	return HitPoints >= 2;
+}
+
+void APFCharacter::LaunchCharacter_Implementation(const FVector& LaunchVelocity)
+{
+	ACharacter::LaunchCharacter(LaunchVelocity, false, false);
+}
+
+void APFCharacter::PlayForceFeedback_Implementation(UForceFeedbackEffect* ForceFeedbackEffect)
+{
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+	check(PFPlayerController)
+	
+	PFPlayerController->ClientPlayForceFeedback(ForceFeedbackEffect);
 }
 
 void APFCharacter::BeginPlay()

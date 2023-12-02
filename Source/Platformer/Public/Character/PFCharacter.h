@@ -33,6 +33,9 @@ public:
 	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
 	virtual void AddToPoints_Implementation(int32 InPoints) override;
 	virtual void ActivatePowerUp_Implementation(const EPowerUpType PowerUpType) override;
+	virtual bool CanBreakBlock_Implementation() override;
+	virtual void LaunchCharacter_Implementation(const FVector& LaunchVelocity) override;
+	virtual void PlayForceFeedback_Implementation(UForceFeedbackEffect* ForceFeedbackEffect) override;
 	/** Player Interface */
 
 protected:
@@ -83,7 +86,7 @@ protected:
 	TObjectPtr<USoundBase> PowerDownSound;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 HitPoints { 2 };
+	int32 HitPoints { 1 };
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName HandSocketName;

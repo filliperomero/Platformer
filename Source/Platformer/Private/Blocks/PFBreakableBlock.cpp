@@ -4,6 +4,7 @@
 
 #include "PFFunctionLibrary.h"
 #include "Interface/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 APFBreakableBlock::APFBreakableBlock()
 {
@@ -19,10 +20,16 @@ void APFBreakableBlock::HitBlock(AActor* TargetActor)
 {
 	Super::HitBlock(TargetActor);
 
-	FVector Location = GetActorLocation();
-	Location.Z += 50;
+	if (!IPlayerInterface::Execute_CanBreakBlock(TargetActor))
+	{
+		if (NotAbleToBreakSound) UGameplayStatics::PlaySound2D(this, NotAbleToBreakSound);
+		
+		AnimateBlock();
+
+		return;
+	}
 	
-	UPFFunctionLibrary::PlayBlockInteractFX(this, SoundEffect, nullptr, InteractParticleEffect, Location);
+	UPFFunctionLibrary::PlayBlockInteractFX(this, SoundEffect, nullptr, InteractParticleEffect, GetActorLocation());
 	
 	ShowFloatingPoints(TargetActor);
 

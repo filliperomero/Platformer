@@ -39,4 +39,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ActivatePowerUp(const EPowerUpType PowerUpType);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanBreakBlock();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void LaunchCharacter(const FVector& LaunchVelocity);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void PlayForceFeedback(UForceFeedbackEffect* ForceFeedbackEffect);
 };

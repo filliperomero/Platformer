@@ -41,7 +41,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	TObjectPtr<USoundBase> NotAbleToInteractSound;
 	
-	/** Amount of Time a Block can be interacted. Set to 0.f to make it interacted only once */
+	/** Amount of Time a Block can be interacted. Set to 0 to make it interacted only once */
 	UPROPERTY(EditAnywhere, Category = "Block Properties")
 	float InteractTime = 0.f;
 

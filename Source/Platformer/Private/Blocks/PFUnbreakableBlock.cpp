@@ -3,6 +3,7 @@
 #include "Blocks/PFUnbreakableBlock.h"
 #include "PFFunctionLibrary.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Interface/PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Platformer/Platformer.h"
@@ -27,6 +28,10 @@ void APFUnbreakableBlock::BeginPlay()
 		BlockMesh->SetCollisionResponseToChannel(ECC_Fireball, ECR_Ignore);
 		BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBoxBeginOverlap);
 		BoxCollision->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnBoxEndOverlap);
+
+		// For now we don't support invisible blocks with P-Block
+		ChildActorComponent->DestroyComponent();
+		CoinCollider->DestroyComponent();
 	}
 	else
 	{

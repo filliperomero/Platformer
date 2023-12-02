@@ -21,6 +21,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	virtual void OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> PlayerDetectRange;
 
@@ -32,5 +35,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBoxComponent> StompBoxCollider;
-	
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	int32 Damage = 1;
+
 };

@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/PlayerInterface.h"
 #include "Platformer/Platformer.h"
 
 APFGoomba::APFGoomba()
@@ -47,4 +48,13 @@ APFGoomba::APFGoomba()
 void APFGoomba::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereColliderBeginOverlap);
+}
+
+void APFGoomba::OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!OtherActor->Implements<UPlayerInterface>()) return;
+
+	IPlayerInterface::Execute_AddHitPoints(OtherActor, -Damage);
 }

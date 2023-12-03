@@ -7,7 +7,9 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Platformer/Platformer.h"
+#include "UI/Widget/PFPointsTextComponent.h"
 
 APFGoomba::APFGoomba()
 {
@@ -50,6 +52,17 @@ void APFGoomba::BeginPlay()
 	Super::BeginPlay();
 
 	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereColliderBeginOverlap);
+	StompBoxCollider->OnComponentHit.AddDynamic(this, &ThisClass::OnStompBoxColliderHit);
+}
+
+void APFGoomba::Die()
+{
+	if (DeathSound) UGameplayStatics::PlaySound2D(this, DeathSound);
+	
+	if (DeathEffect)
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathEffect, SphereCollider->GetComponentLocation());
+
+	Destroy();
 }
 
 void APFGoomba::OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -57,4 +70,41 @@ void APFGoomba::OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComp
 	if (!OtherActor->Implements<UPlayerInterface>()) return;
 
 	IPlayerInterface::Execute_AddHitPoints(OtherActor, -Damage);
+}
+
+void APFGoomba::OnStompBoxColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (!OtherActor->Implements<UPlayerInterface>() || Hit.ImpactNormal.Z != -1) return;
+
+	SphereCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	if (StompSound) UGameplayStatics::PlaySound2D(this, StompSound);
+	
+	IPlayerInterface::Execute_AddToPoints(OtherActor, AmountOfPoints);
+	ShowFloatingPoints();
+
+	PaperFlipbookComponent->SetWorldScale3D(FVector(.25f, .25f, .1f));
+	PaperFlipbookComponent->AddWorldOffset(FVector(0.f, 0.f, -35.f));
+	
+	GetCharacterMovement()->DisableMovement();
+	StompBoxCollider->DestroyComponent();
+
+	GetWorldTimerManager().SetTimer(DieTimer, this, &ThisClass::DieTimerFinished, 0.5f);
+}
+
+// TODO: Refactor this function to be reusable across the application
+void APFGoomba::ShowFloatingPoints()
+{
+	if (PointsTextComponentClass == nullptr) return;
+
+	UPFPointsTextComponent* PointsTextComponent = NewObject<UPFPointsTextComponent>(this, PointsTextComponentClass);
+	PointsTextComponent->RegisterComponent();
+	PointsTextComponent->AttachToComponent(this->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	PointsTextComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	PointsTextComponent->SetPointsText(AmountOfPoints);
+}
+
+void APFGoomba::DieTimerFinished()
+{
+	Die();
 }

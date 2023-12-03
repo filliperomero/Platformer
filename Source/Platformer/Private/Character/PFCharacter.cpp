@@ -241,8 +241,11 @@ void APFCharacter::ShootFireball(const FInputActionValue& Value)
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(FRotator(-30.f, YawRotation, 0.f).Quaternion());
+	
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
 
-	GetWorld()->SpawnActor<APFFireball>(FireballClass, SpawnTransform);
+	GetWorld()->SpawnActor<APFFireball>(FireballClass, SpawnTransform, SpawnParameters);
 	
 	if (FireballSound) UGameplayStatics::PlaySoundAtLocation(this, FireballSound, GetActorLocation());
 }

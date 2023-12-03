@@ -9,6 +9,7 @@
 #include "Interface/PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Platformer/Platformer.h"
+#include "Projectiles/PFFireball.h"
 #include "UI/Widget/PFPointsTextComponent.h"
 
 APFGoomba::APFGoomba()
@@ -52,6 +53,7 @@ void APFGoomba::BeginPlay()
 	Super::BeginPlay();
 
 	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereColliderBeginOverlap);
+	SphereCollider->OnComponentHit.AddDynamic(this, &ThisClass::OnSphereColliderHit);
 	StompBoxCollider->OnComponentHit.AddDynamic(this, &ThisClass::OnStompBoxColliderHit);
 }
 
@@ -70,6 +72,17 @@ void APFGoomba::OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComp
 	if (!OtherActor->Implements<UPlayerInterface>()) return;
 
 	IPlayerInterface::Execute_AddHitPoints(OtherActor, -Damage);
+}
+
+void APFGoomba::OnSphereColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	const APFFireball* Fireball = Cast<APFFireball>(OtherActor);
+
+	if (Fireball == nullptr) return;
+
+	IPlayerInterface::Execute_AddToPoints(Fireball->GetOwner(), AmountOfPoints);
+
+	Die();
 }
 
 void APFGoomba::OnStompBoxColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

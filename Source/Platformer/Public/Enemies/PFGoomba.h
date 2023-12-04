@@ -21,10 +21,17 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void Die();
 
 	UFUNCTION()
 	virtual void OnSphereColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnPlayerDetectRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnPlayerDetectRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
 	virtual void OnSphereColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -32,6 +39,9 @@ protected:
 	UFUNCTION()
 	virtual void OnStompBoxColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+	virtual void OnCapsuleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> PlayerDetectRange;
 
@@ -62,10 +72,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Enemy Properties")
 	TSubclassOf<UPFPointsTextComponent> PointsTextComponentClass;
 
+	UPROPERTY(EditAnywhere, Category = "Enemy Properties")
+	bool bShouldMoveLeft = true;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Properties")
+	bool bIsSeeker = false;
+
 private:
 	void ShowFloatingPoints();
-
 	void DieTimerFinished();
 
 	FTimerHandle DieTimer;
+
+	UPROPERTY()
+	TObjectPtr<AActor> TargetActor;
+	
+	bool bIsPlayerInRange = false;
 };

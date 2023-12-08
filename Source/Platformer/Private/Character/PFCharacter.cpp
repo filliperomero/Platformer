@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Game/PFGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obstacles/PFWarpPipe.h"
 #include "Platform/PFPlatformBase.h"
@@ -167,6 +168,11 @@ void APFCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->SetSpawnTransform(GetActorTransform());
 	}
 }
 

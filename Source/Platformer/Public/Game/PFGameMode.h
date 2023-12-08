@@ -13,6 +13,13 @@ class APFGameMode : public AGameModeBase
 
 public:
 	APFGameMode();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "")
+	FTransform SpawnTransform = FTransform();
+
+public:
+	FORCEINLINE void SetSpawnTransform(const FTransform& InSpawnTransform) { SpawnTransform = InSpawnTransform; }
 };
 
 

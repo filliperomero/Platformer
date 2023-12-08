@@ -26,7 +26,7 @@ class PLATFORMER_API IPlayerInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void UpdateOverlappingPlatform(APFPlatformBase* Platform);
+	void UpdateOverlappingActor(AActor* InOverlappingActor);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void AddToCoins(int32 InCoins);

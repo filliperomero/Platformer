@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Obstacles/PFWarpPipe.h"
 #include "Platform/PFPlatformBase.h"
 #include "Player/PFPlayerController.h"
 #include "Projectiles/PFFireball.h"
@@ -68,9 +69,9 @@ void APFCharacter::PossessedBy(AController* NewController)
 	}
 }
 
-void APFCharacter::UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform)
+void APFCharacter::UpdateOverlappingActor_Implementation(AActor* InOverlappingActor)
 {
-  	OverlappingPlatform = Platform;
+  	OverlappingActor = InOverlappingActor;
 }
 
 void APFCharacter::AddToCoins_Implementation(int32 InCoins)
@@ -189,6 +190,7 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFCharacter::Move);
 		EnhancedInputComponent->BindAction(PlayerDownAction, ETriggerEvent::Started, this, &APFCharacter::PlayerDown);
+		EnhancedInputComponent->BindAction(PlayerUpAction, ETriggerEvent::Started, this, &APFCharacter::PlayerUp);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &APFCharacter::ShootFireball);
 	}
 	else
@@ -220,11 +222,34 @@ void APFCharacter::Move(const FInputActionValue& Value)
 
 void APFCharacter::PlayerDown(const FInputActionValue& Value)
 {
-	if (IsValid(OverlappingPlatform))
+	if (!IsValid(OverlappingActor)) return;
+
+	if (const APFPlatformBase* PlatformBase = Cast<APFPlatformBase>(OverlappingActor))
 	{
-		OverlappingPlatform->GetPlatformMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		OverlappingPlatform = nullptr;
+		PlatformBase->GetPlatformMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+	else if (APFWarpPipe* WarpPipe = Cast<APFWarpPipe>(OverlappingActor))
+	{
+		WarpPipe->Interact(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unrecognized Actor, PlayerDown Function couldn't run properly."))
+	}
+
+	OverlappingActor = nullptr;
+}
+
+void APFCharacter::PlayerUp(const FInputActionValue& Value)
+{
+	if (!IsValid(OverlappingActor)) return;
+	
+	if (APFWarpPipe* WarpPipe = Cast<APFWarpPipe>(OverlappingActor))
+	{
+		WarpPipe->Interact(this);
+	}
+
+	OverlappingActor = nullptr;
 }
 
 void APFCharacter::ShootFireball(const FInputActionValue& Value)

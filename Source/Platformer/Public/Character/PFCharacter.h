@@ -28,7 +28,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	/** Player Interface */
-	virtual void UpdateOverlappingPlatform_Implementation(APFPlatformBase* Platform) override;
+	virtual void UpdateOverlappingActor_Implementation(AActor* InOverlappingActor) override;
 	virtual void AddToCoins_Implementation(int32 InCoins) override;
 	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
 	virtual void AddToPoints_Implementation(int32 InPoints) override;
@@ -43,6 +43,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	void Move(const FInputActionValue& Value);
 	void PlayerDown(const FInputActionValue& Value);
+	void PlayerUp(const FInputActionValue& Value);
 	void ShootFireball(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -102,7 +103,7 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<APFPlatformBase> OverlappingPlatform;
+	TObjectPtr<AActor> OverlappingActor;
 
 	UPROPERTY()
 	APFPlayerController* PFPlayerController;
@@ -124,6 +125,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PlayerDownAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PlayerUpAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ShootAction;

@@ -13,6 +13,8 @@ class APFGameMode : public AGameModeBase
 
 public:
 	APFGameMode();
+	
+	void RequestRespawn(ACharacter* Character, AController* Controller);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "")

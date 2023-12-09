@@ -1,6 +1,7 @@
 // Copyright Fillipe Romero
 
 #include "Game/PFGameMode.h"
+#include "GameFramework/Character.h"
 #include "UObject/ConstructorHelpers.h"
 
 APFGameMode::APFGameMode()
@@ -11,4 +12,11 @@ APFGameMode::APFGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+void APFGameMode::RequestRespawn(ACharacter* Character, AController* Controller)
+{
+	Character->Destroy();
+
+	RestartPlayerAtTransform(Controller, SpawnTransform);
 }

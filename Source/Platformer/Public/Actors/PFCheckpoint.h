@@ -47,6 +47,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Checkpoint Properties")
 	TObjectPtr<UNiagaraSystem> CheckpointEffect;
 
-private:
-	bool bCanInteract = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool bReached = false;
 };

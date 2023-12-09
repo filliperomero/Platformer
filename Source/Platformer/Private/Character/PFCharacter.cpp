@@ -89,7 +89,10 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 
 	if (HitPoints == 0)
 	{
-		Destroy();
+		if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+		{
+			GameMode->RequestRespawn(this, Controller);
+		}
 		return;
 	}
 

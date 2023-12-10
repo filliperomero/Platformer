@@ -60,6 +60,9 @@ APFCharacter::APFCharacter()
 void APFCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+	// Make sure we respawn in the correct size
+	GetCapsuleComponent()->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 	
 	if (APFPlayerController* PC = Cast<APFPlayerController>(GetController()))
 	{
@@ -83,16 +86,28 @@ void APFCharacter::AddToCoins_Implementation(int32 InCoins)
 	return PFPlayerController->AddCoins(InCoins);
 }
 
+void APFCharacter::Die()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	GetMesh()->PlayAnimation(DeathSequence, true);
+	if (DeathSound) UGameplayStatics::PlaySound2D(this, DeathSound);
+
+	if (DeathEffect)
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathEffect, GetActorLocation(), FRotator::ZeroRotator, FVector(3.f, 3.f, 3.f));
+
+	AnimateCharacterDeath();
+	GetWorldTimerManager().SetTimer(DeathTimer, this, &APFCharacter::DeathTimerFinished, DeathDelay);
+}
+
 void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 {
 	HitPoints = FMath::Clamp(HitPoints + InHitPoints, 0, 2);
 
 	if (HitPoints == 0)
 	{
-		if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
-		{
-			GameMode->RequestRespawn(this, Controller);
-		}
+		Die();
 		return;
 	}
 
@@ -211,6 +226,14 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void APFCharacter::FireballTimerFinished()
 {
 	bCanShoot = true;
+}
+
+void APFCharacter::DeathTimerFinished()
+{
+	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->RequestRespawn(this, Controller);
+	}
 }
 
 void APFCharacter::Move(const FInputActionValue& Value)

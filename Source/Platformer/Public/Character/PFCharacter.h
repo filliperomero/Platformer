@@ -53,6 +53,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void HandleDamageCharacter();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void AnimateCharacterDeath();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Realtime Camera Settings (Temporary)")
 	bool bCanAdjustCameraInRealtime = false;
 
@@ -86,6 +89,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USoundBase> PowerDownSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USoundBase> DeathSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UParticleSystem> DeathEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UAnimSequence> DeathSequence;
+
 	UPROPERTY(VisibleAnywhere)
 	int32 HitPoints { 1 };
 
@@ -100,6 +112,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float FireballDelay = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	float DeathDelay = 2.5f;
 
 private:
 	UPROPERTY()
@@ -138,8 +153,11 @@ private:
 	bool bCanShoot = true;
 
 	FTimerHandle FireballTimer;
+	FTimerHandle DeathTimer;
 
+	void Die();
 	void FireballTimerFinished();
+	void DeathTimerFinished();
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

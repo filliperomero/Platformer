@@ -35,6 +35,9 @@ public:
 	void AddHitPoints(int32 InHitPoints);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void AddLives(int32 InLives);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void AddToPoints(int32 InPoints);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

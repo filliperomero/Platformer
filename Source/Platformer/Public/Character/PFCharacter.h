@@ -31,6 +31,7 @@ public:
 	virtual void UpdateOverlappingActor_Implementation(AActor* InOverlappingActor) override;
 	virtual void AddToCoins_Implementation(int32 InCoins) override;
 	virtual void AddHitPoints_Implementation(int32 InHitPoints) override;
+	virtual void AddLives_Implementation(int32 InLives) override;
 	virtual void AddToPoints_Implementation(int32 InPoints) override;
 	virtual void ActivatePowerUp_Implementation(const EPowerUpType PowerUpType) override;
 	virtual bool CanBreakBlock_Implementation() override;

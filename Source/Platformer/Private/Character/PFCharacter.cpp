@@ -107,6 +107,7 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 
 	if (HitPoints == 0)
 	{
+		Execute_AddLives(this, -1);
 		Die();
 		return;
 	}
@@ -137,6 +138,14 @@ void APFCharacter::AddHitPoints_Implementation(int32 InHitPoints)
 		bHasFlowerPower = false;
 		HandleDamageCharacter();
 	}
+}
+
+void APFCharacter::AddLives_Implementation(int32 InLives)
+{
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+	check(PFPlayerController)
+	
+	return PFPlayerController->AddLives(InLives);
 }
 
 void APFCharacter::AddToPoints_Implementation(int32 InPoints)
@@ -230,6 +239,10 @@ void APFCharacter::FireballTimerFinished()
 
 void APFCharacter::DeathTimerFinished()
 {
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+
+	if (PFPlayerController->GetLives() == 0) return;
+	
 	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
 	{
 		GameMode->RequestRespawn(this, Controller);

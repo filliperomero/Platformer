@@ -16,6 +16,7 @@ class PLATFORMER_API APFPlayerController : public APlayerController
 public:
 	void AddCoins(int32 InCoins);
 	void AddPoints(int32 InPoints);
+	void AddLives(int32 InLives);
 
 	FOnPlayerStatChangedSignature OnCoinsChangedDelegate;
 	FOnPlayerStatChangedSignature OnLivesChangedDelegate;

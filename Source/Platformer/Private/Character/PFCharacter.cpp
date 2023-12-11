@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Components/ArrowComponent.h"
 #include "Game/PFGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obstacles/PFWarpPipe.h"
@@ -55,6 +56,10 @@ APFCharacter::APFCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	FlagAttachPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FlagAttachPoint"));
+	FlagAttachPoint->SetupAttachment(RootComponent);
+	FlagAttachPoint->SetRelativeLocation(FVector(40.f, 0.f, -55.f));
 }
 
 void APFCharacter::PossessedBy(AController* NewController)

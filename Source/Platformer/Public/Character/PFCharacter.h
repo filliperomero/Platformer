@@ -99,6 +99,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAnimSequence> DeathSequence;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UAnimSequence> GoalPoleSequence;
+
 	UPROPERTY(VisibleAnywhere)
 	int32 HitPoints { 1 };
 
@@ -167,5 +170,6 @@ public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE UArrowComponent* GetFlagAttachPoint() const { return FlagAttachPoint; }
+	FORCEINLINE UAnimSequence* GetGoalPoleSequence() const { return GoalPoleSequence; }
 };
 

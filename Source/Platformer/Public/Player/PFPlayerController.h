@@ -37,10 +37,12 @@ private:
 	int32 Points = 0;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 LevelTime = 500;
+	int32 LevelTime = 507;
 
 public:
 	FORCEINLINE int32 GetCoins() const { return Coins; }
 	FORCEINLINE int32 GetLives() const { return Lives; }
 	FORCEINLINE int32 GetPoints() const { return Points; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetLevelTime() const { return LevelTime; }
 };

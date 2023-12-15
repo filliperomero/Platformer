@@ -1,7 +1,24 @@
 ﻿// Copyright Fillipe Romero
 
 #include "Player/PFPlayerController.h"
+#include "Game/PFGameMode.h"
 #include "Kismet/GameplayStatics.h"
+
+void APFPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->OnLevelTimeChangedDelegate.AddLambda(
+			[this](int32 LevelTimeValue)
+			{
+				LevelTime = LevelTimeValue;
+				OnLevelTimeChangedDelegate.Broadcast(LevelTimeValue);
+			}
+		);
+	}
+}
 
 void APFPlayerController::AddCoins(int32 InCoins)
 {

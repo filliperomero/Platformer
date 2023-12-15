@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PFPBlock.generated.h"
 
+class APFLevelSettings;
 class APFBlockBase;
 class UBoxComponent;
 
@@ -52,6 +53,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "P-Block Properties")
 	TObjectPtr<UForceFeedbackEffect> ForceFeedbackEffect;
+
+	UPROPERTY(EditAnywhere, Category = "P-Block Properties")
+	TObjectPtr<APFLevelSettings> PFLevelSettings;
 
 	UPROPERTY(EditAnywhere, Category = "P-Block Properties")
 	float TimeDuration = 8.f;

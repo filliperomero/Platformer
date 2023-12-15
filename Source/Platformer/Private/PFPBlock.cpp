@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Interface/PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Actors/PFLevelSettings.h"
+#include "Game/PFGameMode.h"
 
 APFPBlock::APFPBlock()
 {
@@ -52,6 +54,16 @@ void APFPBlock::BeginPlay()
 	Super::BeginPlay();
 
 	BoxCollider->OnComponentHit.AddDynamic(this, &ThisClass::OnBoxColliderHit);
+	
+	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->OnCompleteLevelDelegate.AddLambda(
+			[this]()
+			{
+				AudioComponent->Stop();
+			}
+		);
+	}
 }
 
 void APFPBlock::OnBoxColliderHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -67,6 +79,7 @@ void APFPBlock::OnBoxColliderHit(UPrimitiveComponent* HitComponent, AActor* Othe
 	if (ParticleEffect) UGameplayStatics::SpawnEmitterAtLocation(this, ParticleEffect, Location);
 
 	AudioComponent->Play();
+	if (IsValid(PFLevelSettings)) PFLevelSettings->ToggleAudio(true);
 
 	if (CameraShake)
 		UGameplayStatics::PlayWorldCameraShake(this, CameraShake, OtherActor->GetActorLocation(), 1000.f, 2000.f);
@@ -106,4 +119,6 @@ void APFPBlock::TimerFinished()
 	}
 	
 	AudioComponent->Stop();
+	
+	if (IsValid(PFLevelSettings)) PFLevelSettings->ToggleAudio(false);
 }

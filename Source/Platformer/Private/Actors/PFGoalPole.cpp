@@ -6,8 +6,10 @@
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Game/PFGameMode.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 APFGoalPole::APFGoalPole()
 {
@@ -83,6 +85,11 @@ void APFGoalPole::OnBoxCollisionBeginOverlap(UPrimitiveComponent* OverlappedComp
 	APFCharacter* Character = Cast<APFCharacter>(OtherActor);
 
 	if (Character == nullptr) return;
+
+	if (APFGameMode* GameMode = Cast<APFGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->CompleteLevel();
+	}
 
 	bReached = true;
 	

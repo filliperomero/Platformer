@@ -14,6 +14,8 @@ class PLATFORMER_API APFPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+	
 	void AddCoins(int32 InCoins);
 	void AddPoints(int32 InPoints);
 	void AddLives(int32 InLives);
@@ -21,6 +23,7 @@ public:
 	FOnPlayerStatChangedSignature OnCoinsChangedDelegate;
 	FOnPlayerStatChangedSignature OnLivesChangedDelegate;
 	FOnPlayerStatChangedSignature OnPointsChangedDelegate;
+	FOnPlayerStatChangedSignature OnLevelTimeChangedDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SFX")
@@ -37,7 +40,7 @@ private:
 	int32 Points = 0;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 LevelTime = 507;
+	int32 LevelTime = 0;
 
 public:
 	FORCEINLINE int32 GetCoins() const { return Coins; }

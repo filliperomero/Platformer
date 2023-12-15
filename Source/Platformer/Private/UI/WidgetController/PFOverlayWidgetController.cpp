@@ -10,6 +10,7 @@ void UPFOverlayWidgetController::BroadcastInitialValues()
 	OnPlayerCoinsChangedDelegate.Broadcast(GetPFPC()->GetCoins());
 	OnPlayerLivesChangedDelegate.Broadcast(GetPFPC()->GetLives());
 	OnPlayerPointsChangedDelegate.Broadcast(GetPFPC()->GetPoints());
+	OnGameLevelTimeChangedDelegate.Broadcast(GetPFPC()->GetLevelTime());
 }
 
 void UPFOverlayWidgetController::BindCallbacksToDependencies()
@@ -35,6 +36,13 @@ void UPFOverlayWidgetController::BindCallbacksToDependencies()
 		[this](int32 NewValue)
 		{
 			OnPlayerPointsChangedDelegate.Broadcast(NewValue);
+		}
+	);
+
+	GetPFPC()->OnLevelTimeChangedDelegate.AddLambda(
+		[this](int32 NewValue)
+		{
+			OnGameLevelTimeChangedDelegate.Broadcast(NewValue);
 		}
 	);
 }

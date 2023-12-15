@@ -25,4 +25,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnStatChangedSignature OnPlayerPointsChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnStatChangedSignature OnGameLevelTimeChangedDelegate;
 };

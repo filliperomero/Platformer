@@ -60,6 +60,8 @@ void APFLevelSettings::BeginPlay()
 				LevelMusicComponent->Stop();
 				TimeRunningOutWarningAudioComponent->Stop();
 				LevelCompleteAudioComponent->Play();
+
+				GetWorldTimerManager().SetTimer(ChangeLevelTimer, this, &ThisClass::ChangeLevelTimerFinished, DelayToChangeLevel);
 			}
 		);
 
@@ -77,7 +79,6 @@ void APFLevelSettings::BeginPlay()
 				{
 					LevelMusicComponent->Stop();
 					TimeRunningOutWarningAudioComponent->Stop();
-					// TODO: Need to End Game and kill the player. Most probably we will do this in GameMode.
 				}
 			}
 		);
@@ -93,4 +94,9 @@ void APFLevelSettings::OnTimeRunningOutWarningAudioComplete()
 		LevelMusicComponent->SetPaused(false);
 		LevelMusicComponent->SetPitchMultiplier(1.05); 
 	}
+}
+
+void APFLevelSettings::ChangeLevelTimerFinished() const
+{
+	UGameplayStatics::OpenLevel(this, NextLevelName);
 }

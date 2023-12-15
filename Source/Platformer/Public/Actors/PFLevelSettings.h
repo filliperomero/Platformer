@@ -39,6 +39,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level Settings")
 	int32 TimeRunningOutWarning = 50;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level Settings")
+	FName NextLevelName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level Settings")
+	float DelayToChangeLevel = 10.f;
+
 private:
 	bool bLevelComplete = false;
+
+	FTimerHandle ChangeLevelTimer;
+
+	void ChangeLevelTimerFinished() const;
 };

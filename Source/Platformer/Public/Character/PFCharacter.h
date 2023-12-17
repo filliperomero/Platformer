@@ -47,6 +47,8 @@ protected:
 	void PlayerUp(const FInputActionValue& Value);
 	void ShootFireball(const FInputActionValue& Value);
 	void PauseGame(const FInputActionValue& Value);
+	void SprintStarted(const FInputActionValue& Value);
+	void SprintCompleted(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -166,6 +168,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PauseAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* SprintAction;
 
 	// For Now we are going to have this variable
 	bool bHasFlowerPower = false;

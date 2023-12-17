@@ -36,7 +36,7 @@ APFCharacter::APFCharacter()
 	GetCharacterMovement()->JumpZVelocity = 1500.f;
 	GetCharacterMovement()->GravityScale = 2.5f;
 	GetCharacterMovement()->AirControl = 1.f;
-	GetCharacterMovement()->MaxWalkSpeed = 800.f;
+	GetCharacterMovement()->MaxWalkSpeed = 650.f;
 	GetCharacterMovement()->GroundFriction = 2.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
@@ -232,6 +232,8 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(PlayerUpAction, ETriggerEvent::Started, this, &APFCharacter::PlayerUp);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &APFCharacter::ShootFireball);
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &APFCharacter::PauseGame);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APFCharacter::SprintStarted);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APFCharacter::SprintCompleted);
 	}
 	else
 	{
@@ -350,4 +352,14 @@ void APFCharacter::PauseGame(const FInputActionValue& Value)
 		if (PauseMenuSound) UGameplayStatics::PlaySound2D(this, PauseMenuSound);
 		UGameplayStatics::SetGamePaused(this, false);
 	}
+}
+
+void APFCharacter::SprintStarted(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = 1200.f;
+}
+
+void APFCharacter::SprintCompleted(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = 650.f;
 }

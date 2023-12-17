@@ -46,6 +46,7 @@ protected:
 	void PlayerDown(const FInputActionValue& Value);
 	void PlayerUp(const FInputActionValue& Value);
 	void ShootFireball(const FInputActionValue& Value);
+	void PauseGame(const FInputActionValue& Value);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -94,6 +95,9 @@ protected:
 	TObjectPtr<USoundBase> DeathSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USoundBase> PauseMenuSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UParticleSystem> DeathEffect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -126,6 +130,12 @@ private:
 
 	UPROPERTY()
 	APFPlayerController* PFPlayerController;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> PauseWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> PauseWidget;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -154,9 +164,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ShootAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PauseAction;
+
 	// For Now we are going to have this variable
 	bool bHasFlowerPower = false;
-
 	bool bCanShoot = true;
 
 	FTimerHandle FireballTimer;

@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/ArrowComponent.h"
 #include "Game/PFGameMode.h"
 #include "Kismet/GameplayStatics.h"
@@ -230,6 +231,7 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(PlayerDownAction, ETriggerEvent::Started, this, &APFCharacter::PlayerDown);
 		EnhancedInputComponent->BindAction(PlayerUpAction, ETriggerEvent::Started, this, &APFCharacter::PlayerUp);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &APFCharacter::ShootFireball);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &APFCharacter::PauseGame);
 	}
 	else
 	{
@@ -323,4 +325,29 @@ void APFCharacter::ShootFireball(const FInputActionValue& Value)
 	GetWorld()->SpawnActor<APFFireball>(FireballClass, SpawnTransform, SpawnParameters);
 	
 	if (FireballSound) UGameplayStatics::PlaySoundAtLocation(this, FireballSound, GetActorLocation());
+}
+
+void APFCharacter::PauseGame(const FInputActionValue& Value)
+{
+	PFPlayerController = PFPlayerController == nullptr ? GetController<APFPlayerController>() : PFPlayerController;
+
+	if (!PFPlayerController->bShowMouseCursor)
+	{
+		PauseWidget = CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass);
+		PauseWidget->AddToViewport();
+		
+		PFPlayerController->SetShowMouseCursor(true);
+
+		if (PauseMenuSound) UGameplayStatics::PlaySound2D(this, PauseMenuSound);
+		UGameplayStatics::SetGamePaused(this, true);
+	}
+	else
+	{
+		if (IsValid(PauseWidget)) PauseWidget->RemoveFromParent();
+		
+		PFPlayerController->SetShowMouseCursor(false);
+
+		if (PauseMenuSound) UGameplayStatics::PlaySound2D(this, PauseMenuSound);
+		UGameplayStatics::SetGamePaused(this, false);
+	}
 }

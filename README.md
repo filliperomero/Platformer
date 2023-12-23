@@ -3,7 +3,7 @@
 <div align="center">
   <h1 align="center">Platformer</h1>
   <p align="center">
-    To Be Written...
+    A platformer game (akin to the classic Mario Game)
   </p>
 </div>
 
@@ -21,7 +21,7 @@
 
 [![Game ScreenShot][game-screenshot]](https://github.com/filliperomero/Platformer)
 
-To Be Written...
+In this project, we create a platformer game (akin to the classic Mario Game) implementing a variety of obstacles to avoid, coins to colect, blocks to destroy and platforms to use.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
